@@ -11,18 +11,22 @@ close all
 %% constants
 classesNo = 2;
 featuresNo = 3;
-testRate = 0.2;
+testRate = 0;
 
 %% trainig data 
-fr(1,:) = [6, 5.92, 5.58, 5.92, 5, 5.5, 5.42, 5.75];
-fr(2,:) = [180, 190, 170, 165, 100, 150, 130, 150];
-fr(3,:) = [12, 11, 12, 10, 6, 8, 7, 9];
-gender = [2, 2, 2, 2, 1, 1, 1, 1]; % 2 = male, 1 = female
+fr(1,:) = [5.92, 5.58, 5.92, 5, 5.5, 5.42, 5.75, 6];
+fr(2,:) = [190, 170, 165, 100, 150, 130, 150, 180];
+fr(3,:) = [11, 12, 10, 6, 8, 7, 9, 12];
+gender = [2, 2, 2, 1, 1, 1, 1, 2]; % 2 = male, 1 = female
+
+%% todo
+% read from excel standard form : 5.92 190 11 2
+% confusion matrix
 
 
 %% seperate genders
 trainingN = (1-testRate)*numel(gender);
-trainingN = (1-testRate)*numel(gender);
+N = numel(gender)
 features = [[[],[],[]], [[],[],[]]];
 
 for c=1:classesNo
@@ -47,17 +51,12 @@ for f=1:featuresNo
 end
 
 
-%% classification
-function gender = classify(givenFeatures)
-    for c=1:classesNo
-        p(c) = 1;
-        for f=1:featuresNo  
-            p(c) = p(c) * exp( (givenFeatures(f)-means(c,f))^2 / (2*vars(c,f)^2) ) / sqrt( 2*pi* vars(c,f)^2 );
-        end
-    end
+means
+vars
     
-    [value, index] = max(p);
-    gender = index;
-end
-    
+
+%% test
+
+gender = classify([6,130,8], classesNo, featuresNo, means, vars)
+
 
