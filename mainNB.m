@@ -21,15 +21,17 @@ gender = [2, 2, 2, 2, 1, 1, 1, 1]; % 2 = male, 1 = female
 
 %% seperate genders
 N = numel(gender);
-features = [[[],[],[]], [[],[],[]]]
+features = [[[],[],[]], [[],[],[]]];
 
-for i=1:N
-    for f=1:featuresNo
-        for c=1:classesNo
+for c=1:classesNo
+    for f=1:featuresNo 
+        tmp = [];
+        for i=1:N 
             if gender(i)==c
-                features(c,f,end+1) = fr(f,i)
+                tmp(end+1) = fr(f,i);
             end
         end
+        features(c,f,:) = tmp;
     end
 end
         
@@ -38,8 +40,8 @@ end
 for f=1:featuresNo
     for c=1:classesNo
         if gender(i)==1
-            means(c,f) = mean(features(c,f))
-            vars(c,f) = var(features(c,f))
+            means(c,f) = mean(features(c,f,:));
+            vars(c,f) = var(features(c,f,:));
         end
     end
 end
