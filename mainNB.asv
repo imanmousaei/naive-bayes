@@ -11,6 +11,7 @@ close all
 %% constants
 classesNo = 2;
 featuresNo = 3;
+testRate = 0.2;
 
 %% trainig data 
 fr(1,:) = [6, 5.92, 5.58, 5.92, 5, 5.5, 5.42, 5.75];
@@ -20,17 +21,19 @@ gender = [2, 2, 2, 2, 1, 1, 1, 1]; % 2 = male, 1 = female
 
 
 %% seperate genders
-N = numel(gender);
+trainingN = (1-testRate)*numel(gender);
+trainingN = (1-testRate)*numel(gender);
 features = [[[],[],[]], [[],[],[]]];
 
 for c=1:classesNo
-    for 
+    for f=1:featuresNo 
         tmp = [];
-        for f=1:featuresNo
+        for i=1:trainingN 
             if gender(i)==c
-                features(c,f) = [features(c,f),fr(f,i)]
+                tmp(end+1) = fr(f,i);
             end
         end
+        features(c,f,:) = tmp;
     end
 end
         
@@ -38,19 +41,23 @@ end
 %% train
 for f=1:featuresNo
     for c=1:classesNo
-        if gender(i)==1
-            means(c,f) = mean(features(c,f))
-            vars(c,f) = var(features(c,f))
-        end
+        means(c,f) = mean(features(c,f,:));
+        vars(c,f) = var(features(c,f,:));
     end
 end
 
-%%
+
+%% classification
+function gender = classify(givenFeatures)
+    for c=1:classesNo
+        p(c) = 1;
+        for f=1:featuresNo  
+            p(c) = p(c) * exp( (givenFeatures(f)-means(c,f))^2 / (2*vars(c,f)^2) ) / sqrt( 2*pi* vars(c,f)^2 );
+        end
+    end
     
-    % plot
-%     disp(['best fitness=', num2str(val(end))]);
-%     plot(generation,val(end),'k.');
-%     hold on
-%     pause(0.0000001)
+    [value, index] = max(p);
+    gender = index;
+end
     
 
